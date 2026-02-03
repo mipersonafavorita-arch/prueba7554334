@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Panel - DeTodoYa NOBOL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f4f4f4;margin:0}
+header{background:#000;color:#ffd400;padding:20px;text-align:center}
+.card{background:#fff;margin:20px;padding:20px;border-radius:10px}
+input,select{width:100%;padding:8px;margin-top:8px}
+button{background:#ffd400;border:none;padding:10px;border-radius:6px;font-weight:bold;cursor:pointer}
+.item{display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding:8px}
+.item button{background:red;color:#fff;border:none;border-radius:6px;padding:4px 8px}
+</style>
+</head>
+
+<body onload="mostrar()">
+
+<header>
+<h2>⚙️ Panel de productos</h2>
+<p>DeTodoYa NOBOL</p>
+</header>
+
+<div class="card">
+<h3>➕ Agregar producto</h3>
+<input id="nombre" placeholder="Nombre del producto">
+<input id="precio" type="number" placeholder="Precio">
+<input id="imagen" placeholder="Ruta imagen (ej: img/ejemplo.jpg)">
+<select id="categoria">
+ <option>Tecnología</option>
+ <option>Celulares y Accesorios</option>
+ <option>Hogar</option>
+ <option>Cocina</option>
+ <option>Belleza y Cuidado Personal</option>
+ <option>Ropa y Moda</option>
+ <option>Zapatos y Calzado</option>
+ <option>Electrónica</option>
+ <option>Juguetes y Niños</option>
+ <option>Papelería y Oficina</option>
+ <option>Limpieza</option>
+ <option>Salud</option>
+ <option>Mascotas</option>
+ <option>Regalos</option>
+ <option>Otros</option>
+</select>
+<button onclick="agregar()">Guardar producto</button>
+</div>
+
+<div class="card">
+<h3>📦 Productos</h3>
+<div id="lista"></div>
+</div>
+
+<script>
+let productos = JSON.parse(localStorage.getItem("productosNOBOL")) || [];
+
+function guardar(){
+ localStorage.setItem("productosNOBOL",JSON.stringify(productos));
+}
+
+function agregar(){
+ if(!nombre.value || !precio.value || !imagen.value){
+  alert("Completa todos los campos");
+  return;
+ }
+ productos.push({
+  id:Date.now(),
+  nombre:nombre.value,
+  precio:parseFloat(precio.value),
+  imagen:imagen.value,
+  categoria:categoria.value
+ });
+ guardar();
+ nombre.value="";precio.value="";imagen.value="";
+ mostrar();
+}
+
+function mostrar(){
+ lista.innerHTML="";
+ productos.forEach((p,i)=>{
+  lista.innerHTML+=`
+   <div class="item">
+    ${p.nombre} - $${p.precio}
+    <button onclick="eliminar(${i})">❌</button>
+   </div>`;
+ });
+}
+
+function eliminar(i){
+ if(confirm("¿Eliminar producto?")){
+  productos.splice(i,1);
+  guardar();
+  mostrar();
+ }
+}
+</script>
+
+</body>
+</html>

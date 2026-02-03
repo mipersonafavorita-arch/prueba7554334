@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Productos - DeTodoYa NOBOL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;margin:0;background:#f4f4f4}
+header{background:#000;color:#ffd400;padding:20px;text-align:center}
+.botones{
+ display:flex;gap:8px;
+ flex-wrap:wrap;justify-content:center;
+ margin:15px
+}
+.botones button{
+ padding:8px 12px;border:none;
+ border-radius:6px;cursor:pointer
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;margin:15px
+}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+
+.producto{
+ background:#fff;padding:15px;
+ border-radius:10px;text-align:center
+}
+</style>
+</head>
+
+<body onload="mostrar('Todos')">
+
+<header>
+ <h2>🛍️ Productos</h2>
+</header>
+
+<div class="botones">
+ <button onclick="mostrar('Todos')">Todos</button>
+ <button onclick="mostrar('Tecnología')">Tecnología</button>
+ <button onclick="mostrar('Hogar')">Hogar</button>
+</div>
+
+<div class="grid" id="lista"></div>
+
+<script>
+const productos=[
+ {id:1,nombre:"Cable USB",precio:3,categoria:"Tecnología"},
+ {id:2,nombre:"Cargador rápido",precio:6,categoria:"Tecnología"},
+ {id:3,nombre:"Audífonos",precio:8,categoria:"Tecnología"},
+ {id:4,nombre:"Power Bank",precio:15,categoria:"Tecnología"},
+ {id:5,nombre:"Foco LED",precio:4,categoria:"Hogar"}
+];
+
+function mostrar(cat){
+ const lista=document.getElementById("lista");
+ lista.innerHTML="";
+ productos
+ .filter(p=>cat==="Todos"||p.categoria===cat)
+ .forEach(p=>{
+  lista.innerHTML+=`
+  <div class="producto">
+   <strong>${p.nombre}</strong><br>
+   $${p.precio}<br><br>
+   <button onclick="agregar(${p.id})">Agregar</button>
+  </div>`;
+ });
+}
+
+function agregar(id){
+ let carrito=JSON.parse(localStorage.getItem("carritoNOBOL"))||[];
+ let p=productos.find(x=>x.id===id);
+ let item=carrito.find(x=>x.id===id);
+ if(item) item.cantidad++;
+ else carrito.push({...p,cantidad:1});
+ localStorage.setItem("carritoNOBOL",JSON.stringify(carrito));
+ alert("Producto agregado");
+}
+</script>
+
+</body>
+</html>
